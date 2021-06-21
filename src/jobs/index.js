@@ -20,7 +20,7 @@ routes.get("/", async (req, res, next) => {
             .skip(query.options.skip || 0)
             .limit(query.options.limit && query.options.limit < limit ? query.options.limit : limit)
 
-        res.status(200).send({ navigation: query.links("/", total), num_jobs: total, jobs: result })
+        res.status(200).send({ navigation: query.links("https://fake.careers", total), num_jobs: total, jobs: result })
     } catch (error) {
         next(createError(500, error))
     }
