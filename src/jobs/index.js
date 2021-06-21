@@ -9,16 +9,19 @@ const routes = express.Router()
 
 routes.get("/", async (req, res, next) => {
     try {
-        const limit = 20
+        const limit = 10
         const query = q2m(req.query)
+        let filter = {}
         query.options.limit = query.options.limit ? (query.options.limit < limit ? query.options.limit : limit) : limit
-        console.log(query)
-        const total = await jobModel.countDocuments(query.criteria)
+        const total = await jobModel.countDocuments(query.criteria.search ? { $text: { $search: query.criteria.search } } : query.criteria)
+
+        if (query.criteria.search) filter = { $text: { $search: query.criteria.search } }
+
         const result = await jobModel
-            .find(query.criteria)
+            .find(filter)
             .sort(query.options.sort)
             .skip(query.options.skip || 0)
-            .limit(query.options.limit && query.options.limit < limit ? query.options.limit : limit)
+            .limit(limit)
 
         res.status(200).send({ navigation: query.links("https://fake.careers", total), num_jobs: total, jobs: result })
     } catch (error) {
