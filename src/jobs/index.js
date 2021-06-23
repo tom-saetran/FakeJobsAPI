@@ -29,21 +29,21 @@ routes.get("/", async (req, res, next) => {
     }
 })
 
+routes.get("/categories", async (req, res, next) => {
+    try {
+        const categories = await jobModel.find().distinct("job_data.cateory")
+        res.status(200).send(categories)
+    } catch (error) {
+        next(createError(500, error))
+    }
+})
+
 routes.get("/:id", async (req, res, next) => {
     try {
         let result
         if (!isValidObjectId(req.params.id)) next(createError(400, `ID: ${req.params.id} is invalid`))
         else result = await jobModel.findById(req.params.id)
         res.send(result)
-    } catch (error) {
-        next(createError(500, error))
-    }
-})
-
-routes.get("/categories", async (req, res, next) => {
-    try {
-        const categories = await jobModel.find().distinct("job_data.cateory")
-        res.status(200).send(categories)
     } catch (error) {
         next(createError(500, error))
     }
