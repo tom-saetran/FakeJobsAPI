@@ -40,4 +40,13 @@ routes.get("/:id", async (req, res, next) => {
     }
 })
 
+routes.get("/categories", async (req, res, next) => {
+    try {
+        const categories = await jobModel.find().distinct("job_data.cateory")
+        res.status(200).send(categories)
+    } catch (error) {
+        next(createError(500, error))
+    }
+})
+
 export default routes
