@@ -31,7 +31,7 @@ routes.get("/", async (req, res, next) => {
 
 routes.get("/categories", async (req, res, next) => {
     try {
-        const categories = await jobModel.find().distinct("job_data.cateory")
+        const categories = await jobModel.find().distinct("job_data.category")
         res.status(200).send(categories)
     } catch (error) {
         next(createError(500, error))
